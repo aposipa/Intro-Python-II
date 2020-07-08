@@ -1,5 +1,6 @@
 from room import Room
-
+from player import Player
+from item import Item
 # Declare all the rooms
 
 room = {
@@ -38,10 +39,13 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player("Andrew", room['outside'])
+
+game_running = True
 
 # Write a loop that:
-#
 # * Prints the current room name
+       
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
 #
@@ -49,3 +53,44 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+# def direction(player, direction):
+#     attr = direction + '_to'
+
+#     if hasattr(player.current_room, attr):
+#         player.current_room = getattr(player.current_room, attr)
+#     else: 
+#         print("That path is not valid, please choose different direction!")
+
+while game_running: 
+    print("You currently stand in the %s, %s" % (player.current_room.name, player.current_room.description))
+
+    player_input = input("Which direction shall you proceed? [n]:North, [s]:South, [e]:East, or [w]:West?")
+    if str(player_input).lower() == 'q':
+        game_running = False
+        print("You have exited the game!")
+    elif str(player_input).lower() == 'n':
+        if player.current_room.n_to:
+            player.current_room = player.current_room.n_to
+        else:
+            print("That Path isn't a valid one, please choose a new path.")
+    elif str(player_input).lower() == 's':
+        if player.current_room.s_to:
+            player.current_room = player.current_room.s_to
+        else:
+            print("That Path isn't a valid one, please choose a new path.")
+    elif str(player_input).lower() == 'w':
+        if player.current_room.w_to:
+            player.current_room = player.current_room.w_to
+        else:
+            print("That Path isn't a valid one, please choose a new path.")
+    elif str(player_input).lower() == 'e':
+        if player.current_room.e_to:
+            player.current_room = player.current_room.e_to
+        else:
+            print("That Path isn't a valid one, please choose a new path.")
+        
+
+
+
+
