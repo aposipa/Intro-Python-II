@@ -5,3 +5,9 @@ class Player:
         self.name = name
         self.current_room = current_room
         self.inventory = []
+
+    def add_item(self, item):
+        self.inventory.append(item)
+
+    def drop_item(self, item):
+        self.inventory.remove(item)

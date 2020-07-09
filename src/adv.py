@@ -1,6 +1,7 @@
 from room import Room
 from player import Player
 from item import Item
+import random
 # Declare all the rooms
 
 room = {
@@ -21,8 +22,14 @@ to north. The smell of gold permeates the air."""),
 chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
-
-
+# Items
+item = {
+    'Purse': Item("\nCoin Purse", "A leather sack with several valuable coin pieces."),
+    'Sword': Item("Sword", "\nA well-worn sword, looks like its remained from a previous owner of this cave who didn't make it out."),
+    'Potion': Item("Potion", "\nA potion vial containing a strange color liquid. If you drink it side effects may vary."),
+    'Book': Item("Book", "A worn down book whose title reads 'how to find the treasure without dying'."),
+    'Torch': Item("Torch", "A burnt out torch. Could be used again if re-lightened.")
+}
 # Link rooms together
 
 room['outside'].n_to = room['foyer']
@@ -33,6 +40,7 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+
 
 #
 # Main
@@ -54,41 +62,53 @@ game_running = True
 #
 # If the user enters "q", quit the game.
 
-# def direction(player, direction):
-#     attr = direction + '_to'
-
-#     if hasattr(player.current_room, attr):
-#         player.current_room = getattr(player.current_room, attr)
-#     else: 
-#         print("That path is not valid, please choose different direction!")
-
 while game_running: 
-    print("You currently stand in the %s, %s" % (player.current_room.name, player.current_room.description))
+    print("You currently stand in the %s, \n%s" % (player.current_room.name, player.current_room.description))
+    # print(player.current_room)
+    # room[player.current_room].loot = []
+    loot_table = random.sample(list(item), 2)
+    player.current_room.add_item(loot_table)
+    print(f'A glint of light catches your eye, it looks like a {loot_table} lies inside this room.')
 
-    player_input = input("Which direction shall you proceed? [n]:North, [s]:South, [e]:East, or [w]:West?")
-    if str(player_input).lower() == 'q':
+    player_input = input("Which direction shall you proceed? [n]:North, [s]:South, [e]:East, or [w]:West?\n To pickup an item select [get] [item name] , to drop an item select 'drop': item-name.").split(' ')
+    if str(player_input[0]).lower() == 'q':
         game_running = False
         print("You have exited the game!")
-    elif str(player_input).lower() == 'n':
+    elif str(player_input[0]).lower() == 'n':
         if player.current_room.n_to:
             player.current_room = player.current_room.n_to
         else:
             print("That Path isn't a valid one, please choose a new path.")
-    elif str(player_input).lower() == 's':
+    elif str(player_input[0]).lower() == 's':
         if player.current_room.s_to:
             player.current_room = player.current_room.s_to
         else:
             print("That Path isn't a valid one, please choose a new path.")
-    elif str(player_input).lower() == 'w':
+    elif str(player_input[0]).lower() == 'w':
         if player.current_room.w_to:
             player.current_room = player.current_room.w_to
         else:
             print("That Path isn't a valid one, please choose a new path.")
-    elif str(player_input).lower() == 'e':
+    elif str(player_input[0]).lower() == 'e':
         if player.current_room.e_to:
             player.current_room = player.current_room.e_to
         else:
             print("That Path isn't a valid one, please choose a new path.")
+    elif str(player_input[0]).lower() == 'get':
+    #  and str(player_input[1]).lower().split() == loot_table[0]:
+            player.add_item(loot_table[0])
+            print(loot_table)
+            print(f"You've picked up the {loot_table[0]}! It is now stored in you inventory.")
+            print(f"Current Inventory: {player.inventory}")
+    elif str(player_input[0]).lower().split() == 'drop':
+    # and str(player_input[1]).lower().split() == loot_table[0]:
+            player.drop_item(player.inventory)
+            print(loot_table)
+            print(f"You've dropped the item!")
+            print(f"Current Inventory: {player.inventory}")
+    # elif str(player_input[0]) == 'help':
+    #     print('no help provided, good luck budday...')
+    
         
 
 
